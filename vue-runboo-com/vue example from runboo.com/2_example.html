@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Vue 测试实例 - 菜鸟教程(runoob.com)</title>
+		<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="vue_det">
+			<h1>site: {{site}}</h1>
+			<h2>url: {{url}}</h2>
+			<h3>{{details()}}</h3>
+		</div>
+		
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#vue_det', 
+				data: {
+					site: 'Example', 
+					url: "www.baidu.com", 
+					alexa: "10000"
+				}, 
+				methods:{
+					details: function(){
+						return this.site + " - Hello world!!!";
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
