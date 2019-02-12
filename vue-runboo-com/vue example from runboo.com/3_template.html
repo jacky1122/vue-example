@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>模板语法</title>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<style type="text/css">
+			.class1{
+				background: #888;
+				color: #eee;
+			}
+			#class2{
+				background: #238;
+				color: #red;
+			},
+		</style>
+	
+	</head>
+	<body>
+		<div id="app">
+			<!-- 1、数据绑定最常见的形式是用{{}}做文本插值 -->
+			<p>{{message1}}</p>
+			<!-- 2、使用v-html指令用于输出html代码-->
+			<div v-html="message2"></div>
+			<!--3、Html属性中的值应使用v-bind指令--> 
+			<label for="r1">修改颜色</label>
+			<input type="checkbox" id="r1" v-model="use">
+			<br><br>
+			<div v-bind:class="{'class1':use}">v-bind:class 指令</div>
+			<!--4、vue.js提供完全的javascript表达式支持-->
+			{{5+5}}<br/>
+			{{ ok ?  'YES' : 'NO'}} <br/>
+			{{message3.split('').reverse().join('')}}
+			<div v-bind:id="'list-'+id">Vue Example</div>
+			<!--5、指令是带有v-前缀的特殊属性 用于在表达式的值改变时，将某些行为应用到DOM上-->
+			<p v-if="seen">现在你能够看到我了</p>
+			<!--6、参数在指令后冒号指明-->
+			<!--  v-bind指令被用来响应地更新html属性--> 
+			<pre><a v-bind:href="url">Vue Example</a></pre>
+			<!--  v-on指令， 用于监听DOM事件-->
+			<a v-on:click="doSomething">doSomething</a>
+			<!--7、修饰符是以.指明的特殊后缀，用于之处一个指令应该以特殊的方式绑定-->
+			<!--    .prevent修饰符告诉v-on指令对于触发的事件调用event.preventDefault()-->
+			<form v-on:submit.prevent="onSubmit"></form>
+			<!--8、用户输入，如input输入框， 可以用v-model指令实现双向数据绑定--> 
+			<p>{{ message4 }}</p>
+			<input v-model="message4">
+			<!--    v-model指令用来在input/select/text/checkbox/radio等表当元素空间上创建双向数据绑定，
+			        根据表单上的值，自动更新绑定的元素的值。
+			        按钮的事件可以使用v-on监听事件，并对用户的输入进行响应。-->
+			<p>{{message5}}</p>
+			<button v-on:click="reverseMessage">反转字符串</button>	
+			<!--9、过滤器： vue.js运行允许自定义过滤器，被用作一些常见文本的格式化。用管道符指示-->
+			<!--    过滤器函数接受表达式的值作为第一个参数-->
+			<!--    过滤器可以串联{{message | filterA | filterB}}-->
+			<!--    过滤器是javascript函数， 因此可以接受参数{{message | filterA('arg1', arg2)}},message将作为第一个参数-->
+			<p>{{message6}}</p>
+			<p>{{message6 | capitalize}}</p>
+			<div v-bind:id="rawId | formatId">{{message6}}</div>
+			<!--10、缩写: v-bind缩写, vue.js为两个最为常用的指令提供了特别的缩写-->
+			<a v-bind:href="url">test</a>
+			<a :href="url">test</a>
+			<!-- v-on缩写  -->
+			<a v-on:click="doSomething">test</a>
+			<a @click="doSomething">test</a>
+		</div>
+		<script type="text/javascript">
+			new Vue({
+				el: '#app', 
+				data: {
+					message1: "Hello Vue.js!", 
+					message2: '<h1>Vue Example</h1>',
+					use: true, 
+					ok: true,  
+					message3: 'Hello Vue.js', 
+					id: 1,  
+					seen: true, 
+					url: 'http://www.baidu.com', 
+					message4: "Hello Vue.js!", 
+					message5: "Hello Vue.js!", 
+					message6: "hello world",
+				}, 
+				methods:{
+					doSomething: function(){
+						alert("Hello world!")
+					}, 
+					doSubmit: function(){
+					}, 
+					reverseMessage: function(){
+						this.message5 = this.message5.split('').reverse().join('')
+					},
+					rawId: function(value){
+						return 'class1'
+					},
+				}, 
+				filters:{
+					capitalize: function(value){
+						if(!value) return ''
+						value = value.toString()
+						return value.charAt(0).toUpperCase()+value.slice(1)
+					}, 
+					formatId: function(value) {
+						return 'class2'
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>计算属性&监听属性&样式绑定&事件处理器</title>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<style type="text/css">
+			table{
+				border: 1px solid black;
+				width: 100%;
+			}
+			th{
+				height: 50px;
+			}
+			th,td{
+				border-bottom: 1px solid #ddd;
+			}
+			.base{
+				width: 100px;
+				height: 100px;
+			}
+			.active{
+				width: 100px;
+				height: 100px;
+				background: green;
+			}
+			.text-danger{
+				background: red;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<!--1、计算属性关键字：computed,用于处理一些复杂逻辑-->
+			<!--    计算属性提供的函数作用于属性的getter，比如vm.reverseMessage的getter-->
+			<!--    可以使用methods来替代computed,效果上一样，但是computed是基于它的依赖缓存-->
+			<!--    只有相关依赖发生改变时才会重新取值。而使用methods，在重新渲染的时候，函数总汇重新调用执行-->
+			<!--    可以说使用computed性能会更好，如果不希望使用缓存，可以使用methods属性-->
+			<p>原始字符串：{{message}}</p>
+			<input type="text" v-model="message">
+			<p>计算后反转字符串：{{reverseMessage}}</p>
+			<p>计算后反转字符串：{{reverseMessage2()}}</p>
+			<!--2、computed属性默认只有getter，需要时可以提供一个setter-->
+			<p>name: {{name}}</p>
+			<p>url: {{url}}</p>
+			<p>site: {{site}}</p>
+			
+			<!--3、监听属性watch，可以通过watch来响应数据的变化-->
+			<p>千米: <input type="text" v-model="kilometers"></p>
+			<p>米：<input type="text" v-model="meters"></p>
+			<p id="info"></p>
+			<!--    实例---->
+			<table>
+				<tr>
+					<th>序号</th>
+					<th>商品名称</th>
+					<th>商品价格</th>
+					<th>购买数量</th>
+					<th>操作</th>
+				</tr>
+				<tr v-for="iphone in Ip_Json">
+					<td>{{iphone.id}}</td>
+					<td>{{iphone.name}}</td>
+					<td>{{iphone.price}}</td>
+					<td>
+						<button v-bind:disabled="iphone.count === 0" v-on:click="iphone.count-=1">-</button>
+						{{iphone.count}}
+						<button v-on:click="iphone.count+=1">+</button>
+					</td>
+					<td><button v-on:click="iphone.count=0">移出</button></td>
+				</tr>
+			</table>
+			<p>总价：￥{{totalPrice()}}</p>
+			<!--4、class与style是html元素的属性，用于设置元素的样式，可以用v-bind来设置样式属性-->
+			<div v-bind:class="{active: isActive}"></div>
+			<!---    可以在对象中传入更多的属性用来动态切换多个class--->
+			<div class="static" v-bind:class="{active:isActive,'text-danger': hasError}"></div>
+			<br/>
+			<!---    也可以直接绑定数据里的一个对象-->
+			<div v-bind:class="classObject"></div>
+			<br/>
+			<!---    可以在这里绑定返回对象的计算属性，更加常用和强大--->
+			<div v-bind:class="classObject2"></div>
+			<br/>
+			<!--5、可以在v-bind:style直接设置样式-->
+			<div v-bind:style="{color: activeColor, fontSize: fontSize+ 'px' }">菜鸟教程</div>
+			<!--    也可以直接绑定一个样式对象-->
+			<div v-bind:style="styleObject">菜鸟教程</div>
+			<!--    v-bind:style可以使用数组将多个样式对象引用到一个元素上-->
+			<div v-bind:style="[baseStyle, overridingStyles]">菜鸟教程</div>
+			
+			<!--6、Mustache(双大括号写法)不能在HTML属性中使用，应使用v-bind指令-->
+			<!--    <div v-bind:id="dynamicId"></div> -->
+			<!--    布尔值的属性也一样，如果条件被求值为false的话，该属性也会被移出-->
+			<!--    <button v-bind:disabled="someDynamicCondition">Button</button>-->
+			<!--7、Tips: -->
+			<!--    1、v-bind动态绑定指令，默认情况下标签自带属性的值是固定的，在为了能够动态给这些属性添加值，可以使用-->
+			<!--        v-bind:你要动态变化的值="表达式"-->
+			<!--    2、v-bind用于绑定属性和数据，其缩写为":"，也就是v-bind:id === :id -->
+			<!--    3、v-model用于在表单控件上的，用于实现双向数据绑定，所以，如果用在除了表单空间以外的标签是没有效果的-->
+		</div>
+		<script type="text/javascript">
+			var count1 = 1;
+			var count2 = 1;
+			var vm = new Vue({
+				el: '#app', 
+				data: {
+					message: 'Hello world!',
+					name: 'baidu', 
+					url: 'https://www.baidu.com',
+					kilometers: 0,
+					meters: 0,
+					Ip_Json: [{
+						id: 1, 
+						name: 'iphone 8',
+						price: 5099,
+						count: 1,
+					},{
+						id: 2, 
+						name: 'iphone xs',
+						price: 8699,
+						count: 1,
+					},{
+						id: 3, 
+						name: 'iphone xr',
+						price: 6499,
+						count: 1,
+					}], 
+					isActive: true,
+					hasError: true,
+					classObject: {
+						active: true, 
+						'text-danger': true
+					}, 
+					error: {
+						value: true,
+						type: 'fatal'
+					}, 
+					activeColor: 'green', 
+					fontSize: 30, 
+					styleObject: {
+						color: 'green', 
+						fontSize: '30px',						
+					}, 
+					baseStyle: {
+						color: 'green', 
+						fontSize: '30px', 
+					}, 
+					overridingStyles:{
+						'font-weight': 'bold'
+					}
+				}, 
+				computed:{
+					reverseMessage: function(){
+						count1 += 1
+						return count1+ ' ' + this.message.split('').reverse().join('')
+					}, 
+					site: {
+						get: function() {
+							return this.name+ ' ' + this.url
+						}, 
+						set: function(newValue){
+							var names = newValue.split(' ')
+							this.name = names[0]
+							this.url = names[names.length-1]
+						}
+					}, 
+					classObject2: function(){
+						return {
+							base: true,
+							active: this.isActive && !this.error.value, 
+							'text-danger': this.error.value && this.error.type === 'fatal',
+						}
+					}
+				}, 
+				methods:{
+					reverseMessage2: function(){
+						count2 += 1
+						return count2 + ' ' +this.message.split('').reverse().join('')
+					},
+					totalPrice: function(){
+						var totalIP = 0; 
+						for(var i = 0, len = this.Ip_Json.length; i< len;i++){
+							totalIP+=this.Ip_Json[i].price*this.Ip_Json[i].count;
+						}
+						return totalIP;
+					}
+				},
+				watch:{
+					kilometers: function(val){
+						this.kilometers = val;
+						this.meters = val*1000;
+					},
+					meters: function(val){
+						this.kilometers = val /1000;
+						this.meters = val;
+					}
+				}
+			})
+			
+			vm.site = "HelloWorld http://www.runoob.com";
+			document.write('name: ' + vm.name); 
+			document.write('<br/>');
+			document.write('url: ' + vm.url);
+			
+			vm.$watch('kilometers', function(newValue, oldValue){
+				document.getElementById('info').innerHTML="修改前值为："+oldValue+",修改后值为："+newValue;
+			})
+		</script>
+	</body>
+</html>

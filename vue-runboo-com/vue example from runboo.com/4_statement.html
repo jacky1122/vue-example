@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>条件语句和循环语句</title>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		
+	</head>
+	<body>
+		<div id="app">
+			<!--1、v-if指令  根据表达式的值来决定是否插入响应的元素-->
+			<p v-if="seen">现在你看到我了</p>
+			<template v-if="ok">
+				<h1>Vue Example</h1>
+				<p>Hello world!</p>
+				<p>Oh,my god!</p>
+			</template>
+			<!--    在字符串模板中，需要用下面的方式写条件块
+			Vue.component('child', {
+				props: ['myMessage'],
+				template: '{{#if ok}} <h1>Yes</h1> {{/if}}'
+			})
+			-->
+			<!--2、v-else指令-->
+			<div v-if="Math.random() > 0.5">Sorry</div>
+			<div v-else>Not sorry</div>
+			
+			<!--3、v-else-if指令，在2.1.0版本新增，用作v-if的else-if块，可以链式的多次使用-->
+			<div> 
+				<div v-if="type==='A'">A</div>
+				<div v-else-if="type==='B'">B</div>
+				<div v-else-if="type==='C'">C</div>
+				<div v-else>Not A/B/C</div>
+			</div>
+			<h1 v-show="ok">Hello!</h1>
+			<!--4、循环使用v-for指令，以site in sites形式的特殊语法，可绑定一个数据到数组来渲染一个列表-->
+			<ol>
+				<li v-for="site in sites">{{site.name}}</li>
+			</ol>
+			<!--    可以在模板中使用v-for-->
+			<ul>
+				<template v-for="site in sites">
+					<li>{{site.name}}</li>
+					<li>-------------</li>
+				</template>
+			</ul>
+			<!--    可以通过一个对象的属性来迭代数据-->
+			<ul>
+				<li v-for="value in sites">{{value}}</li>
+			</ul>
+			<!--    可以提供第二个参数作为键名-->
+			<ul>
+				<li v-for="(value,key) in object">{{key}}: {{value}}</li>
+			</ul>
+			<!--    可以提供第三个参数作为索引-->
+			<ul>
+				<li v-for="(value,key,index) in object">{{index}}: {{key}}: {{value}}</li>
+			</ul>
+			<!--    可以迭代循环整数-->
+			<ul>
+				<li v-for="n in 10">{{n}}</li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+			new Vue({
+				el: '#app', 
+				data: {
+					seen: true, 
+					ok: true,
+					type: 'C',
+					sites:[
+						{name: "Rainboo"}, 
+						{name: "Google"}, 
+						{name: "Tuggle"},
+					],
+					object: {
+						name: 'vue example', 
+						url: 'http://www.baidu.com', 
+						logo: 'baidu.ico'
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
