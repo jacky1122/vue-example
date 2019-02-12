@@ -98,6 +98,62 @@
 			<!--        v-bind:你要动态变化的值="表达式"-->
 			<!--    2、v-bind用于绑定属性和数据，其缩写为":"，也就是v-bind:id === :id -->
 			<!--    3、v-model用于在表单控件上的，用于实现双向数据绑定，所以，如果用在除了表单空间以外的标签是没有效果的-->
+		
+			<!--7、事件监听可以使用v-on指令-->
+			<div>
+				<button v-on:click="countx += 1">增加1</button>
+				<p>这个按钮被点击了{{countx}}次。</p>
+			<!--    v-on可以接收一个定义的方法来调用-->
+				<button v-on:click="greet">Greet</button>
+			<!--    除了直接绑定一个方法，也可以用内联javascript语句-->
+				<button v-on:click="say('hi')">Say Hi</button>
+				<button v-on:click="say('what')">Say what</button>
+			<!--8、Vue.js为v-on提供了事件修饰符来处理DOM事件细节,如：event.preventDefault()或event.stopPropagation().-->
+			<!--    Vue.js通过有点(.)表示的指令后缀来调用修饰符-->
+			<!--    .stop-->
+			<!--    .prevent-->
+			<!--    .capture-->
+			<!--    .self-->
+			<!--    .once-->
+			<!--    阻止事件冒泡-->
+			<!--    <a  v-on:click="doThis"></a> -->
+			<!--    提交事件不再重载页面-->
+			<!--    <form v-on:submit.prevent="onSubmit"></form> -->
+			<!--    修饰符可以串联-->
+			<!--    <a  v-on:click.stop.prevent="doThat"></a> -->
+			<!--    只有修饰符-->
+			<!--    <form  v-on:submit.prevent></form> -->
+			<!--    添加事件监听器时，使用事件捕获模式-->
+			<!--    <div v-on:click.capture="doThat">...</div> -->
+			<!--    只当事件在该元素本身而不是子元素触发时，触发回调-->
+			<!--    <div v-on:click.self="doThat">...</div> -->
+			<!--    click事件只能点击一次,2.1.4版本新增-->
+			<!--    <a  v-on:click.once="doThis">...</a> -->
+			
+			<!--9、按键修饰符:Vue允许v-on在监听键盘事件时，添加按键修饰符-->
+			<!--    只有在keyCode是13时调用vm.submit()-->
+			<!--    <input v-on:keyup.13="submit">-->
+			<!--    记住所有的keyCode比较困难,所以Vue为最常用的按键提供了别名-->
+			<!--     <input v-on:keyup.enter="submit"> 缩写语法 <input @keyup.enter="submit">-->
+			<!--    全部按键别名：-->
+			<!--      .enter-->
+			<!--      .tab-->
+			<!--      .delete-->
+			<!--      .esc-->
+			<!--      .space-->
+			<!--      .up-->
+			<!--      .down-->
+			<!--      .left-->
+			<!--      .right-->
+			<!--      .ctrl-->
+			<!--      .shift-->
+			<!--      .alt-->
+			<!--      .meta-->
+			<!--      <input @keyup.alt.67="clear"> Alt+C -->
+			<!--      <div @click.ctrl="doSomething">Do Something</div>  Ctrl+Click-->
+			</div>
+			
+			
 		</div>
 		<script type="text/javascript">
 			var count1 = 1;
@@ -148,7 +204,8 @@
 					}, 
 					overridingStyles:{
 						'font-weight': 'bold'
-					}
+					},
+					countx: 0
 				}, 
 				computed:{
 					reverseMessage: function(){
@@ -184,6 +241,15 @@
 							totalIP+=this.Ip_Json[i].price*this.Ip_Json[i].count;
 						}
 						return totalIP;
+					},
+					greet: function(event){
+						alert('Hello ' + this.name + '!')
+						if(event){
+							alert(event.target.tagName)
+						}
+					},
+					say:function(message){
+						alert(message)
 					}
 				},
 				watch:{
@@ -206,6 +272,8 @@
 			vm.$watch('kilometers', function(newValue, oldValue){
 				document.getElementById('info').innerHTML="修改前值为："+oldValue+",修改后值为："+newValue;
 			})
+			
+			vm.greet()
 		</script>
 	</body>
 </html>
