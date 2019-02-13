@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>组件</title>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!--1、组件是vue.js强大的功能之一，可以扩展html元素，封装可重用代码-->
+			<!--    注册一个全局组件语法： Vue.component(tagName, options)-->
+			<!--    tagName为组件名，options为配置选项-->
+			<!--2、全局组件：通过Vue.component进行注册-->
+			<hello></hello>
+			<!--3、局部组件：可以在实例选项中注册局部组件-->
+			<hello2></hello2>
+			<!--4、Prop是父组件用来传递数据的一个自定义属性-->
+			<!--    父组件的数据通过props把数据传递给子组件，子组件需要显式地用props选项声明"prop"-->
+			<child message="Hello!"></child>
+			<!--5、动态Prop：类似用v-bind绑定HTML特性到一个表达式，也可以用v-bind动态绑定props的值到父组件的数据中。-->
+			<div>
+				<input type="text" v-model="parentMsg">
+				<br>
+				<child v-bind:message="parentMsg"></child>
+			</div>
+			<ol>
+				<todo-item v-for="item in sites" v-bind:todo="item"></todo-item>
+			</ol>
+			<!--    注意：prop是单向绑定的：当父组件的属性变化时，将传导给子组件，但不能反过来-->
+		
+			<!--6、Prop验证：组件可以为props指定验证要求-->
+			<!--7、自定义事件：父组件使用props传递数据给子组件，但子组件要把数据传递回去必须使用自定义事件-->
+			<!--    可以使用v-on绑定自定义事件，每个Vue实例都实现了事件接口（Event interface)-->
+			<!--    使用$on(eventName)监听事件-->
+			<!--    使用$emit(eventName)触发事件-->
+			<!--    另外，父组件可以在使用子组件的地方直接用v-on来监听子组件触发的事件-->
+			<div id="counter-event-example">
+				<p>{{total}}</p>
+				<button-counter v-on:increment="incrementTotal"></button-counter>
+				<button-counter v-on:increment="incrementTotal"></button-counter>
+			</div>
+			<!--    如果想在某个组件的根元素上监听一个原生事件，可以使用.native修饰v-on-->
+			<!--    <my-component v-on:click.native="doTheThing"></my-component> -->
+			<!--    另外，data必须是一个函数-->
+		</div>
+		<script type="text/javascript">
+			Vue.component('hello', {
+				template:'<h1>自定义组件，Hello!</h1>'
+			})
+			var Child = {
+				template: '<h2>自定义组件，Hello2!</h2>'
+			}
+			Vue.component('child', {
+				props: ['message'], 
+				template:'<span>{{message}}</span>'
+			})
+			Vue.component('todo-item', {
+				props: ['todo'],
+				template: '<li>{{todo.text}}</li>'
+			})
+			
+			Vue.component('example', {
+				props: {
+					//基础类型检测(`null`意思是任何类型都可以)
+					propA: Number,
+					//多种类型
+					propB: [String, Number],
+					//必传且是字符串
+					propC: {
+						type: String, 
+						required: true
+					},
+					//数字,有默认值
+					propD: {
+						type: Number,
+						default: 100
+					},
+					//数组/对象的默认值应当有一个工厂函数返回
+					propE: {
+						type: Object,
+						default: function(){
+							return {message: 'hello'}
+						}
+					},
+					//自定义验证函数
+					propF: {
+						validator: function(value){
+							return value > 10 
+						}
+					},
+					//type可以有下面原生构造器
+					//    String
+					//    Number
+					//    Boolean
+					//    Function 
+					//    Object
+					//    Array
+					//type也可以是自定义构造器,使用instanceof检测
+				}
+			})
+			
+			Vue.component('button-counter', {
+				template:'<button v-on:click="incrementHandler">{{counter}}</button>',
+				data: function(){
+					return {
+						counter: 0 
+					}
+				},
+				methods: {
+					incrementHandler: function(){
+						this.counter+=1
+						this.$emit('increment')
+					}
+				}
+			})
+			
+			new Vue({
+				el: '#app', 
+				components:{
+					'hello2': Child,
+				},
+				data:{
+					parentMsg: 'Hello world!',
+					sites: [
+						{text: 'Runoob'},
+						{text: 'Google'},
+						{text: 'Taobao'}
+					],
+					total: 0
+				},
+				methods: {
+					incrementTotal: function(){
+						this.total+=1
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
