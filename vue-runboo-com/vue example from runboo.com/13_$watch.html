@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>响应接口</title>
+		<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	</head>
+	<body>
+		<!--
+		1、Vue可以添加数据动态响应接口 
+		通过使用$watch属性来实现数据的监听，$watch必须添加在Vue实例之外才能实现正确的响应。
+		-->
+		<div id="app">
+			<p style="font-size:25px">计数器{{counter}}</p>
+			<button @click="counter++" style="font-size:25px">点我</button>
+		</div>
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+				data: {
+					counter: 1
+				}
+			})
+			vm.$watch('counter', function(nval, oval){
+				console.log('计数器值的变化: ' + oval + ' 变为 '+ nval + '!')
+			})
+			setTimeout(
+				function(){
+					vm.counter += 20
+				}, 10000
+			)
+		</script>
+		<!--
+		2、Vue不允许在已经创建的实例上动态添加新的根级响应式属性
+		Vue不能检测到对象属性的添加或删除，最好的方式是在初始化实力前声明根级响应属性
+		如果需要在运行过程中实现属性的添加或删除，则可以使用全局Vue，set和delete方法
+		-->
+		<!--
+		3、Vue.set 
+		用于设置对象的属性，可以解决Vue无法检测添加属性的限制：
+		Vue.set(target, key, value)
+		-->
+		<div id="app2">
+			<p style="font-size:25px">计数器{{counter}}</p>
+			<button @click="counter++" style="font-size:25px">点我</button>
+		</div>
+		<script type="text/javascript">
+			var myproduct = {"id": 1, "name": "book", "price": "20.00"}
+			var vm2 = new Vue({
+				el: '#app2',
+				data: {
+					counter: 1,
+					products: myproduct
+				}
+			})
+			Vue.set(myproduct, 'qty', 1);
+			console.log(vm2)
+			vm2.$watch('counter', function(nval, oval){
+				console.log('计数器值的变化: ' + oval + ' 变为 '+ nval + '!')
+			})
+			setTimeout(
+				function(){
+					vm2.counter += 20
+				}, 10000
+			)
+		</script>
+		<!--
+		4. Vue.delete
+		用于删除动态添加的顺序：
+		Vue.delete(target, key)
+		-->
+		
+	</body>
+</html>

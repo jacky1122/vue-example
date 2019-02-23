@@ -67,5 +67,60 @@
 				}
 			})
 		</script>
+		<!--
+		4、语法&API
+		可以使用全局对象方式Vue.http或者在Vue实例内部使用this.$http来发起HTTP请求 
+		//基于全局Vue对象使用http
+		Vue.http.get("/someUrl", [options]).then(successCallback, errorCallback);
+		Vue.http.post("/someUrl", [body], [options]).then(successCallback, errorCallback)s;s
+		
+		this.$http.get("/someUrl", [options]).then(successCallback, errorCallback);
+		this.$http.post("/someUrl", [body], [options]).then(successCallback, errorCallback)
+		
+		vue-resource提供了7种请求API(REST风格): 
+		get(url, [options])
+		head(url, [options])
+		delete(url, [options])
+		jsonp(url, [options])
+		post(url, [body], [options])
+		put(url, [body], [options])
+		patch(url, [body], [options])s
+
+		option参数说明 
+		url        string                   请求目标url
+		body       Object,FormData,string   作为请求体发送的数据
+		headers    Object                   作为请求头部发送的头部对象
+	    params     Object                   作为URL参数的参数对象
+		method     string                   Http方法
+	    timeout    number                   请求超时    
+		before     function(request)        在请求发送之前修改请求的回调函数
+		progress   function(event)          用于处理上传进度的回调函数ProgrEvent
+		credentials boolean                 是否需要出示用于跨站点请求的凭据
+		emulateHTTP boolean                 是否需要通过设置X-HTTP-Method-Override头部并且以传统POST方式发送PUT，PATCH和DELETE
+		emulateJSON boolean                 设置请求体的类型为application/x-www-form-urlencoded
+		
+		响应对象参数说明
+		url         string                  响应url源
+		body        Object，Blob,string     响应体数据
+		headers     Header                  请求头部对象
+		ok          boolean                 当HTTP响应码为200到299之间的数据时该值为true
+		status      number                  HTTP响应码 
+		statusText  string                  HTTP响应状态
+		
+		text()                              以字符串返回响应体
+	    json()                              以格式化后的json对象方式返回响应体
+		blob()                              以二进制blob对象方式返回响应体
+		
+		-->
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	</body>
 </html>
