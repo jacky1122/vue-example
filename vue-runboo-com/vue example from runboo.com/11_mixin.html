@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>混入</title>
+		<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	</head>
+	<body>
+		<!--
+		1、混入(mixins)
+		定义了一部分可以服用的方法或者计算属性。混入对象可以包含任意组件选项。
+		当组件使用混入对象时，所有混入对象的选项将被混入该组件本身的选项。 
+		-->
+		<div id="databinding">
+		</div>
+		<script type="text/javascript">
+			var vm1 = new Vue({
+				el: '#databinding',
+				data: {}, 
+				methods: {}
+			})
+			
+			var myMixin = {
+				created: function(){
+					this.startmixin() 
+				},
+				methods: {
+					startmixin: function(){
+						document.write("Hello Vue.js")
+					}
+				}
+			}
+			var Component = Vue.extend({
+				mixins: [myMixin]
+			})
+			var component = new Component()
+		</script>
+		
+		<!--
+		2、选项合并 
+		当组件和混入对象含有同名选项时，选项将以恰当的方式混合。
+		数据对象在内部会做浅合并（一层属性深度），在和组件的数据发生冲突时，以组件数据优先。
+		-->
+		<div id="databinding2"></div>
+		<script type="text/javascript">
+			var mixin2= {
+				created: function(){
+					document.write("混入调用<br/>")
+				}
+			}
+			var vm2 = new Vue({
+				mixins: [mixin2], 
+				created: function(){
+					document.write("组件调用<br/>")
+				}
+			})
+		</script>
+		<!--
+		如果methods选项中有相同的函数名，则Vue实例优先级会较高。
+		-->
+		<script type="text/javascript">
+			var mixin3 = {
+				methods: {
+					helloworld: function(){
+						document.write("Hello world method<br/>")
+					},
+					samemethod: function(){
+						document.write("Mixin: 相同方法<br/>")
+					}
+				}
+			}
+			var vm3 = new Vue({
+				mixins: [mixin3], 
+				methods: {
+					start: function(){
+						document.write("start method<br/>")
+					}, 
+					samemethod: function(){
+						document.write("Main: 相同方法<br/>")
+					}
+				}
+			})
+			vm3.helloworld()
+			vm3.start()
+			vm3.samemethod()
+		</script>
+		<!--
+		4、全局混入
+		全局注册混入对象。注意使用！一旦使用全局混入对象，将会响应所有之后创建的额Vue实例。
+		使用恰当时，可以自定义对象注入处理逻辑。
+		-->
+		<script type="text/javascript">
+			Vue.mixin({
+				create: function(){
+					var myOption = this.$options.myOption
+					if(myOption){
+						document.write(myOption)
+					}
+				}
+			})
+			
+			var vm4 = new Vue({
+				myOption: "Hello Vue world!!!"
+			})
+		</script>
+	</body>
+</html>

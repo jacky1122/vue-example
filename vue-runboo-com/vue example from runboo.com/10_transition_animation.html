@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>过渡&动画</title>
+		<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+	</head>
+	<body>
+		<!--1、过渡-->
+		<!--  Vue在插入、更新或者移出DOM时，提供多种不同方式的应用过过渡效果-->
+		<!--  Vue提供内置的过渡封装组件，该组件用于包裹要实现过渡效果的组件-->
+		<!--  语法格式：-->
+		<!--    <transition name="nameoftransition"> -->
+		<!--      <div></div>-->
+		<!--    </transition>-->
+		<style>
+			/*可以设置不同的进入和离开动画*/
+			/*设置持续时间和动画函数*/
+			.fade-enter-active, .fade-leave-active{
+				transition: opacity 2s
+			}
+			.fade-enter, .fade-leave-to{
+				opacity: 0
+			}
+		</style>
+		<div id="app1">
+			<button v-on:click="show=!show">点我</button>
+			<transition name="fade">
+				<p v-show="show" v-bind:style = "styleobj">动画实例</p>
+			</transition>
+		</div>
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: "#app1",
+				data: {
+					show: true, 
+					styleobj: {
+						fontSize: '30px', 
+						color: 'red',
+					}
+				},
+				methods: {
+					
+				}
+			})
+		</script>
+		<!--2、过渡其实就是一个淡入淡出效果。Vue元素显示与隐藏的过渡中，提供了6个class来切换: -->
+		<!--    v-enter: 定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移出--> 
+		<!--    v-enter-active: 定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效
+		             在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。-->
+		<!--    v-enter-to: 2.8.1及以上，定义进入过渡的结束状态。在元素被插入之后下一帧生效（于此同时v-enter被移除,在过渡/动画完成之后移除。-->
+		<!--    v-leave: 定义离开过渡的开始状态。在离开过渡被触发时，立刻生效，下一帧被移除。-->
+		<!--    v-leave-active: 定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发立刻生效，
+		            在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数-->
+		<!--    v-leave-to: 2.8.1及以上，定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效(于此同时v-leave被删除)，在过渡/动画完成之后移除。-->
+		<img src="http://www.runoob.com/wp-content/uploads/2018/06/transition.png" />
+		<!--    以上过渡切换的类名，如果没有名字的<transition>，则v-是这些了类名的默认前缀。
+		        如果使用<transition name="my-transition">,那么v-enter会替换为my-transition-enter  ->
+		<!--    v-enter-active和v-leave-active可以控制进入/离开过渡的不同的缓和曲线-->
+		<style>
+			/*过渡*/
+			.slide-fade-enter-active{
+				transition: all .3s ease;
+			}
+			
+			.slide-fade-leave-active{
+				transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+			}
+			
+			.slide-fade-enter, .slide-fade-leave-to {
+				transform: translateX(10px); 
+				opacity: 0;
+			}
+			/*动画*/
+			.bounce-enter-active{
+				animation: bounce-in .5s;
+			}
+			.bounce-leave-active{
+				animation: bounce-in .5s reverse;
+			}
+			@keyframes bounce-in{
+				0%{
+					transform: scale(0);
+				}
+				50%{
+					transform: scale(1.5);
+				}
+				100% {
+					transform: scale(1);
+				}
+			}
+		</style>
+		<div id="databinding">
+			<button v-on:click="show =!show">点我</button>
+			<transition name="slide-fade">
+				<p v-if="show">Hello world!</p>
+			</transition>
+			
+			<button v-on:click="show2 = !show2">点我动画</button>
+			<transition name="bounce">
+				<p v-if="show2">Hello annimation!</p>
+			</transition>
+		</div>
+		<script type="text/javascript">
+			var vmbind = new Vue({
+				el: "#databinding", 
+				data:{
+					show: true,
+					show2: true
+				}
+			})
+		</script>
+		
+		<!--
+		    3、自定义过渡类名
+		    可以通过以下特性来自定义过渡类名： 
+			enter-class 
+			enter-active-class 
+			enter-to-class
+			leave-class
+			leave-active-class
+			leave-to-class
+			自定义过渡的类名优先级高于普通的类名，可以与第三方(animate.css)的动画库结合使用
+		-->
+		<link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+		<div id="databinding2">
+			<button v-on:click="show = !show">点我3</button>
+			<transition name="customer-classes-transition" enter-active-class="animate tada" leave-active-class="animated bounceOutRight">
+				<p v-if="show">Hello world!</p>
+			</transition>
+		</div>
+		<script type="text/javascript">
+			var vmdatabinding2 = new Vue({
+				el: '#databinding2',
+				data: {
+					show: true
+				}
+			})
+		</script>
+		<!--
+		同时使用过渡和动画： 
+		    Vue为了知道过渡的完成，必须设置相应的时间监听。可以是transitionend或animationend，
+			取决于给元素应用的css规则。使用任何一种，vue能自动识别类型并设置监听。
+			但是，在一些场景中，需要给同一个元素同时设置两种过渡动效，比如animation很快的被触发并完成，
+			而transition效果还没结束。这种情况下，需要使用type特性设置animation或transition来声明需要vue监听的类型。
+		-->
+		<!--
+		显性的过渡持续时间
+		    很多情况下，vue可以自动得出过渡效果的完成时机。默认情况下，vue会等待其在过渡效果的根元素的第一个transitionend
+			或animationend事件。也可以自定义，编排一些列过渡效果，其中一些嵌套的内部元素相比于过渡效果的根元素有延迟的或更长的过渡效果。
+			如果需要可以用<transition>组件上的duration属性定制一个显性的过渡持续时间：
+			<transition :duration="1000">...</transition>
+			也可以定制进入和移出的持续时间：
+			<transition :duration="{enter: 500, leave: 800}">...</transition>
+		-->
+		<!--
+		4、javascript钩子
+		    可以在属性中声明javascript钩子
+			<transition 
+				v-on:before-enter="beforeEnter"
+				v-on:enter="enter"
+				v-on:after-enter="afterEnter"
+				v-on:enter-cancelled="enterCancelled"
+				
+				v-on:before-leave="beforeLeave"
+				v-on:leave="leave"
+				v-on:after-leave="afterLeave"
+				v-on:leave-cancelled="leaveCancelled"
+			</transition>
+			methods: {
+				beforeEnter: function(e1){
+					
+				},
+				//此处回调函数时可以选的设置
+				//与css结合使用
+				enter: function(el, done){
+					done()
+				},
+				afterEnter: function(el){
+					
+				},
+				enterCancelled: function(el){
+					
+				},
+				beforeLeave: function(el){
+					
+				},
+				//此处回调函数时可选设置
+				//与css结合时使用
+				leave: function(el, done){
+					done()
+				},
+				afterLeave: function(el){
+					
+				},
+				leaveCancelled: function(el){
+					
+				}
+			}
+			这些钩子函数可以结合Css Transitions/animations使用，也可以单独使用。
+			当只使用javascript过渡的时候，在enter和leave中必须使用done进行回调。否则他们将会被同步调用，过渡立即完成。
+			推荐对于仅使用javascript过度的元素添加v-bind:css="false",Vue会跳过css的检测，可以避免过渡过程中css的影响。
+		-->
+		<div id="databinding3">
+			<button v-on:click="show=!show">点我</button>
+			<transition v-on:before-enter="beforeEnter"
+				v-on:enter="enter"
+				v-on:leave="leave"
+				v-bind:css="false">
+				<p v-if="show">Hello World!!!</p>
+			</transition>
+		</div>	
+		<script type="text/javascript">
+			var databinding3VM = new Vue({
+				el: "#databinding3",
+				data: {
+					show: false 
+				}, 
+				methods: {
+					beforeEnter: function(el){
+						el.style.opacity = 0
+						el.style.transformOrigin='left'
+					},
+					enter: function(el, done){
+						Velocity(el, {opacity: 1, fontSize: '1.4em'}, {duration: 300})
+						Velocity(el, {fontSize: '1em'}, {complete: done})
+					}, 
+					leave: function(el, done){
+						Velocity(el, {translateX: '15px', rotateZ: '50deg'}, 
+							{duration: 600})
+						Velocity(el, {rotateZ: '100deg'}, {loop: 2})
+						Velocity(el, {
+							rotateZ: '45deg', 
+							translateX: '30px', 
+							translateY: '30px', 
+							opacity: 0
+						}, {complete: done})
+					}
+				}
+			})
+		</script>
+		<!-- 
+		5、初始渲染的过渡
+		可以通过apear特性设置节点的初始渲染的过渡
+		<transition apear> 
+		</transition>
+		默认和进入/离开过渡一样，同样可以自定义css类名
+		<transition 
+		    apear
+			apear-class="customer-appear-class"
+			apear-to-class="customer-apear-to-class"
+			apear-active-class="customer-appear-active-class"
+		> 
+		</transition>
+		也可以自定义javascript钩子
+		<transition
+		    apear 
+			v-on:before-appear="customBeforeAppearHook"
+			v-on:appear="customAppearHook"
+			v-on:after-appear="customAfterAppearHook"
+			v-on:appear-cancelled="customAppearCancelledHook"
+		>
+		</transition>
+		--> 
+		<!-- 
+		6、多个元素的过渡
+		可以设置多个元素的过渡，一般列表与描述：
+		<transition>
+		    <table v-if="items.length >0">
+			</table>
+			<p v-else>Sorry!</p>
+		</transition>
+		需要注意的是当有相同标签名的元素切换时，需要通过key特性设置唯一值来标记让Vue区分他们。
+		否则，Vue为了搞笑知会替换相同标签内部的内容
+		<transition> 
+			<button v-if="isEditing" key="save">
+				Save
+			</button>
+			<button v-else key="edit">
+				Edit
+			</button>
+		</transition>
+		在一些场景中，可以通过给一个元素的key特性设置的状态来替代v-if和v-else
+		<transition> 
+			<button v-bind:key="isEditing">
+				{{isEditing? 'Save' : 'Edit'}}
+			</button>
+		</transition>
+		使用多个v-if的多元素过渡可以重写为绑定了动态属性的单个元素过渡
+		<transition> 
+			<button v-if="docState === 'saved' " key="saved">
+				Edit
+			</button>
+			<button v-if="docState === 'edited' " key="edited">
+				Save
+			</button>
+			<button v-if="docState === 'editing' " key="editing">
+				Cancel
+			</button>
+		</transition>
+		也可以重写为
+		<transition> 
+			<button v-bind:key="docState">
+				{{buttonMessage}}
+			</button>
+		</transition>
+		
+		computed: {
+			buttonMessage: function(){
+				switch(this.docState){
+					case 'saved': return 'Edit'
+					case 'edited': return 'Save'
+					case 'editing': return 'Cancel'
+				}
+			}
+		}
+		-->
+	</body>
+</html>
