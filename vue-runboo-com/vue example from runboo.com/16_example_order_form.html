@@ -92,9 +92,11 @@
 		</style>
 	</head>
 	<body>
-			<form  id="main" v-cloak="">
+			<!--v-cloak隐藏未编译的变量，直到Vue实例准备就绪-->
+			<form  id="main" v-cloak>
 				<h1>Services</h1>
 				<ul>
+					<!--循环输出services数组，设置选项点击后的样式-->
 					<li v-for="service in services" v-on:click="toggleActive(service)" v-bind:class="{'active': service.active}">
 						{{service.name}}<span>{{service.price | currency}}</span>
 					</li>
@@ -105,12 +107,15 @@
 			</form>
 			
 			<script type="text/javascript">
+				//自定义过滤器
 				Vue.filter('currency', function(value){
 					return '$'+value.toFixed(2);
 				})
 				var vm = new Vue({
 					el: '#main', 
 					data : {
+						//定义模型属性 
+						//视图将循环输出数组的数据
 						services: [
 							{
 								name: 'Web Development', 
